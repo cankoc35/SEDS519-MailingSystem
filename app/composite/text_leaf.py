@@ -1,0 +1,1 @@
+"""Text leaf component."""

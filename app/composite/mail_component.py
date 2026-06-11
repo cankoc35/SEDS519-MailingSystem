@@ -1,0 +1,1 @@
+"""Common mail component interface."""

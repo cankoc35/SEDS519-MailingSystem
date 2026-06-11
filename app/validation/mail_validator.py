@@ -1,0 +1,1 @@
+"""Mail validity checks."""

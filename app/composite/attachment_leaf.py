@@ -1,0 +1,1 @@
+"""Attachment leaf component."""
