@@ -1,9 +1,11 @@
 import unittest
 
+from app.adapters.adapter_factory import AdapterFactory
 from app.adapters.csv_adapter import CsvAdapter
 from app.adapters.excel_adapter import ExcelAdapter
 from app.adapters.file_adapter import FileAdapter
 from app.adapters.pdf_adapter import PdfAdapter
+from app.models.attachment import AttachmentType
 
 
 class AdapterTests(unittest.TestCase):
@@ -75,6 +77,21 @@ class AdapterTests(unittest.TestCase):
             "</tbody>"
             "</table>",
         )
+
+    def test_adapter_factory_returns_csv_adapter(self) -> None:
+        adapter = AdapterFactory.get_adapter(AttachmentType.CSV)
+
+        self.assertIsInstance(adapter, CsvAdapter)
+
+    def test_adapter_factory_returns_excel_adapter(self) -> None:
+        adapter = AdapterFactory.get_adapter(AttachmentType.EXCEL)
+
+        self.assertIsInstance(adapter, ExcelAdapter)
+
+    def test_adapter_factory_returns_pdf_adapter(self) -> None:
+        adapter = AdapterFactory.get_adapter(AttachmentType.PDF)
+
+        self.assertIsInstance(adapter, PdfAdapter)
 
 
 if __name__ == "__main__":

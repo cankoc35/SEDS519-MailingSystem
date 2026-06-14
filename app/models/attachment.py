@@ -15,4 +15,5 @@ class Attachment:
     id: int
     file_name: str
     file_path: str
-    file_type: AttachmentType 
+    file_type: AttachmentType
+    html_table: str = ""
