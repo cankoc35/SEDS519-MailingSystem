@@ -1,5 +1,7 @@
 """Mail actions such as display, reply, and validation."""
 
+from typing import Optional
+
 from app.models.mail import Mail
 from app.validation.mail_validator import MailValidator, ValidationResult
 
@@ -22,4 +24,13 @@ class MailController:
             receiver=original_mail.sender,
             subject=subject,
             body=reply_body,
+            attachments=list(original_mail.attachments),
         )
+
+    def toggle_task(self, mail: Mail, task_id: int) -> Optional[bool]:
+        for task in mail.tasks:
+            if task.id == task_id:
+                task.toggle_completed()
+                return task.completed
+
+        return None

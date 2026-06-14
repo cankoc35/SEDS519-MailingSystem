@@ -12,3 +12,6 @@ class Task:
 
     def mark_completed(self) -> None:
         self.completed = True
+
+    def toggle_completed(self) -> None:
+        self.completed = not self.completed

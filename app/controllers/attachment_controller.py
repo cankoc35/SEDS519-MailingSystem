@@ -6,6 +6,9 @@ from app.models.attachment import Attachment
 
 class AttachmentController:
     def convert_attachment(self, attachment: Attachment) -> str:
+        if attachment.html_table:
+            return attachment.html_table
+
         adapter = AdapterFactory.get_adapter(attachment.file_type)
         return adapter.to_html_table(attachment.file_path)
 

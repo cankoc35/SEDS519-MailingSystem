@@ -39,6 +39,15 @@ def get_mail(mail_id: int) -> dict:
         "receiver": mail.receiver,
         "subject": mail.subject,
         "content": mail_controller.display_mail(mail),
+        "tasks": [
+            {
+                "id": task.id,
+                "title": task.title,
+                "description": task.description,
+                "completed": task.completed,
+            }
+            for task in mail.tasks
+        ],
     }
 
 
@@ -77,6 +86,23 @@ def reply_to_mail(mail_id: int, request: ReplyRequest) -> dict:
         "receiver": reply.receiver,
         "subject": reply.subject,
         "body": reply.body,
+    }
+
+
+@router.post("/mails/{mail_id}/tasks/{task_id}/toggle")
+def toggle_task(mail_id: int, task_id: int) -> dict:
+    mail = MAILS.get(mail_id)
+    if mail is None:
+        raise HTTPException(status_code=404, detail="Mail not found.")
+
+    task_completed = mail_controller.toggle_task(mail, task_id)
+    if task_completed is None:
+        raise HTTPException(status_code=404, detail="Task not found.")
+
+    return {
+        "mail_id": mail.id,
+        "task_id": task_id,
+        "completed": task_completed,
     }
 
 

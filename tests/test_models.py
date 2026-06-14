@@ -127,6 +127,15 @@ class ModelTests(unittest.TestCase):
 
         self.assertTrue(task.completed)
 
+    def test_task_can_toggle_completed_status(self) -> None:
+        task = Task(id=1, title="Reply to mail")
+
+        task.toggle_completed()
+        self.assertTrue(task.completed)
+
+        task.toggle_completed()
+        self.assertFalse(task.completed)
+
 
 if __name__ == "__main__":
     unittest.main()

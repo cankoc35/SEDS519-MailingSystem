@@ -78,6 +78,25 @@ class ControllerTests(unittest.TestCase):
         self.assertIs(updated_attachment, attachment)
         self.assertEqual(attachment.html_table, updated_table)
 
+    def test_attachment_controller_convert_returns_updated_html_when_available(self) -> None:
+        controller = AttachmentController()
+        updated_table = (
+            "<table><tbody>"
+            "<tr><td>Edited value</td></tr>"
+            "</tbody></table>"
+        )
+        attachment = Attachment(
+            id=5,
+            file_name="sample.csv",
+            file_path="samples/attachments/sample.csv",
+            file_type=AttachmentType.CSV,
+            html_table=updated_table,
+        )
+
+        html = controller.convert_attachment(attachment)
+
+        self.assertEqual(html, updated_table)
+
     def test_mail_controller_displays_mail_as_composite_dict(self) -> None:
         controller = MailController()
         attachment = Attachment(
@@ -137,12 +156,20 @@ class ControllerTests(unittest.TestCase):
 
     def test_mail_controller_replies_to_mail(self) -> None:
         controller = MailController()
+        attachment = Attachment(
+            id=1,
+            file_name="sample.csv",
+            file_path="samples/attachments/sample.csv",
+            file_type=AttachmentType.CSV,
+            html_table="<table><tbody><tr><td>Edited</td></tr></tbody></table>",
+        )
         original_mail = Mail(
             id=3,
             sender="teacher@example.com",
             receiver="student@example.com",
             subject="Homework",
             body="Please fill the attachment.",
+            attachments=[attachment],
         )
 
         reply = controller.reply_to_mail(
@@ -156,6 +183,8 @@ class ControllerTests(unittest.TestCase):
         self.assertEqual(reply.receiver, "teacher@example.com")
         self.assertEqual(reply.subject, "Re: Homework")
         self.assertEqual(reply.body, "I completed the homework.")
+        self.assertEqual(reply.attachments, [attachment])
+        self.assertEqual(reply.tasks, [])
 
     def test_mail_controller_does_not_duplicate_reply_prefix(self) -> None:
         controller = MailController()
